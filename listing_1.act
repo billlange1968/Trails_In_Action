@@ -6,7 +6,7 @@
 ; [E7 5F 32 D9 1B 77 3D 89
 ;  74 05 6C C4 EB C2 6B ]
 
-DEFINE pres_ratio = "35"
+DEFINE pers_ratio = "35"
 
 BYTE col1=709,col2=710,border=712,
      cur=752,key=764,attract=77,
