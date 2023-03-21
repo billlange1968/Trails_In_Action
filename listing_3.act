@@ -1,0 +1,38 @@
+; Checksum Data
+; [BA 99 3b]
+
+PROC Draw()
+; =================================
+; =          for joystick         =
+; =  (substitute into listing 1)  =
+; =================================
+
+INT delx=[0],dely=[0],st
+
+x0=95
+y0=95
+
+DO
+   st=Stick(0)
+   delx=(st&4) RSH 2 - ((st&8) RSH 3)
+   dely=((st&1)) - ((st&2) RSH 1)
+   x0=(x0+2*delx)
+   y0=(y0+2*dely)
+   IF x0<1 OR x0>190 THEN x0=95 FI
+   IF y0<1 OR y0>190 THEN y0=95 FI
+   IF Strig(0)=0 then
+      Setup(24)
+      IF mirror=1 THEN mirror=0
+      ELSE mirror=1
+      FI
+      DO UNTIL Strig(1)<>0 OD
+   FI
+   Octplot(x(n),y(n))
+   x(n)=x0
+   y(n)=y0
+   Octplot(x(n),y(n))
+   n==+1
+   IF n>maxpts THEN n=0 FI
+   UNTIL (key<>255)
+OD
+RETURN
