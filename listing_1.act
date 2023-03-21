@@ -1,0 +1,159 @@
+; TRAILS.ACT
+; Copyright 1986 by Kevin Garlow
+; Last modified 1-3-86
+
+; Checksum Data
+; [E7 5F 32 D9 1B 77 3D 89
+;  74 05 6C C4 EB C2 6B ]
+
+DEFINE pres_ratio = "35"
+
+BYTE col1=709,col2=710,border=712,
+     cur=752,key=764,attract=77,
+     clock=20,mirror=[1],mode
+CARD ARRAY x(500),y(500)
+CARD x0,y0,n=[0],i,maxpts=[175]
+
+PROC Setup(BYTE mode)
+
+FOR i=0 TO maxpts DO
+   x(i)=0:y(i)=0
+OD
+
+Graphics(mode) : col2=0 : col1=14
+cur=0 : color=1 : border=16*Rand(16)+2
+IF mode<>0 THEN
+   Plot(64,0)
+   DrawTo(192+64,0)
+   DrawTo(192+64,191)
+   DrawTo(64,191)
+   DrawTo(64,0)
+FI
+RETURN
+
+PROC Instructions()
+; ==================================  
+; =          for Koalapad          =
+; = (see listing 2 for joystick)   =
+; ==================================
+
+Setup(0)
+PrintE("            ''''Trails!''''")
+PutE()
+PrintE("      Draw with KoalaPad...")
+PutE()
+Print("LEFT __\ CLEAR       TOGGLE ")
+PrintE("/__ RIGHT")
+Print("button / screen      mirror ")
+PrintE("\ button")
+PutE()
+Print("  ANY KEY:")
+PrintE("  see INSTRUCTIONS  ")
+Print("          or ")
+PrintE("change PERSISTENCE")
+PutE()
+PutE()
+PutE()
+Print("-------------------")
+PrintE("-------------------")
+IF key=255 THEN
+   Print("    Hit any button ")
+   Print("to start:")
+   DO UNTIL (PTrig(0)=0 OR PTrig(1)=0
+         OR key<>255 OR STrig(0)=0) OD
+   key=255
+FI
+RETURN
+
+PROC Get_pers()
+   Instructions()
+   key=255
+   PutE()
+   maxpts==/pers_ratio
+   Print("Persistence is now ")
+   PrintCE(maxpts)
+   PutE()
+   Print("Enter new ")
+   Print("persistence (1-10): ")
+   PrintC(maxpts)
+   Put('31)
+   IF maxpts=10 THEN Put('31) FI
+   maxpts=InputB()
+   RETURN
+   
+   PROC Octplot(CARD x0,y0)
+   CARD x1,y1
+   
+   x1=191-x0
+   y1=191-y0
+   IF Locate(x0+64,y0)=1 THEN
+      color=0
+   ELSE color=1
+   FI
+   
+   Plot(x0+64,y0)
+   
+   IF mirror=1 THEN
+      Plot(x0+64,y1)
+      Plot(y0+64,x0) : Plot(y0+64,x1)
+      Plot(y0+64,x0) : Plot(x1+64,y1)
+      Plot(y1+64,x0) : Plot(y1+64,x1)
+   FI
+   attract=0
+   clock=0
+   IF mirror=0 THEN
+      DO UNTIL ((clock&1)=1) OD
+   
+   FI
+RETURN
+   
+PROC Draw()
+; ==================================  
+; =          for Koalapad          =
+; = (see listing 2 for joystick)   =
+; ==================================
+   
+DO
+
+   x0=(Paddle(0)*95/114)-1
+   y0=(Paddle(1)*95/114)-1
+   IF PTrig(1)=0 THEN
+      Setup(24)
+      IF mirror=1 THEN mirror=0
+      ELSE mirror=1
+      FI
+      DO UNTIL Ptrig(1)<>0 OD
+   FI
+   IF Ptrig(0)=0 THEN
+      Setup(24)
+   FI
+   Octplot(x(n),y(n))
+   x(n)=x0
+   y(n)=y0
+   Octplot(x(n),y(n))
+   n==+1
+   IF n>=maxpts THEN n=0 FI
+   UNTIL (key<>255)
+OD
+RETURN
+
+PROC Main()
+
+Instructions()
+DO
+   IF (key<>255) THEN
+      Get_pers()
+      IF maxpts >10 THEN maxpts=10
+      ELSEIF maxpts<1 THEN
+         Graphics(0)
+         RETURN
+      FI
+      maxpts=maxpts*pers_ratio
+   FI
+   key=255 : Setup(24)
+   Draw()
+OD
+
+
+   
+   
