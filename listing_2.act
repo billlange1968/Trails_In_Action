@@ -1,0 +1,37 @@
+; Checksum data
+; [2A 9D 20 72 ]
+
+PROC Instructions()
+; ==================================  
+; =          for joystick          =
+; =  (substitute into listing 1)   =
+; ==================================
+
+Setup(0)
+PrintE("            ''''Trails!''''")
+PutE()
+Print("      Draw with ")
+Print("joystick...")
+PutE()
+Print("LEFT __\ CLEAR       TOGGLE ")
+PrintE("/__ RIGHT")
+Print("button / screen      mirror ")
+PrintE("\ button")
+PutE()
+Print("  ANY KEY:")
+PrintE("  see INSTRUCTIONS  ")
+Print("          or ")
+PrintE("change PERSISTENCE")
+PutE()
+PutE()
+PutE()
+Print("-------------------")
+PrintE("-------------------")
+IF key=255 THEN
+   Print("    Hit any button ")
+   Print("to start:")
+   DO UNTIL (PTrig(0)=0 OR PTrig(1)=0
+         OR key<>255 OR STrig(0)=0) OD
+   key=255
+FI
+RETURN
