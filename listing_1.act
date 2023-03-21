@@ -76,8 +76,8 @@ PROC Get_pers()
    Print("Enter new ")
    Print("persistence (1-10): ")
    PrintC(maxpts)
-   Put('31)
-   IF maxpts=10 THEN Put('31) FI
+   Put(31)
+   IF maxpts=10 THEN Put(31) FI
    maxpts=InputB()
    RETURN
    
@@ -150,10 +150,9 @@ DO
       FI
       maxpts=maxpts*pers_ratio
    FI
-   key=255 : Setup(24)
+   
+   key=255
+   Setup(24)
    Draw()
+
 OD
-
-
-   
-   
